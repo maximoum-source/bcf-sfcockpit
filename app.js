@@ -241,6 +241,11 @@ function docsView(){
 function render(){
   tab=location.hash.slice(1)||'overview';
   if(!['overview','matches','roster','scouting','sources','docs'].includes(tab)) tab='overview';
+  if (tab === 'sources' && !isCoach()) {
+    tab = 'overview';
+    location.hash = '#overview';
+  }
+  updateNavPermissions();
   document.querySelectorAll('[data-tab]').forEach(a=>{a.classList.toggle('active',a.dataset.tab===tab);if(a.dataset.tab===tab)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current');});
   $('#main').innerHTML=(storageProblem?`<div class="error" role="alert">${escapeHTML(storageProblem)} <a href="#sources">Données & imports</a></div>`:'')+(archiveNotice?`<div class="notice" style="margin-bottom:20px">${escapeHTML(archiveNotice)}</div>`:'')+({overview,matches:matchesView,roster:rosterView,scouting:scoutingView,sources:sourcesView,docs:docsView}[tab])();
   bindView();
@@ -570,15 +575,30 @@ try {
 } catch (e) {}
 
 const AUTH_KEY = 'bcf_authenticated_v1';
+const ROLE_KEY = 'bcf_user_role_v1';
+
 const EXPECTED_USER_HASH = '661387ed4e7482fc1772fdfdeb168c60ce9dce9c2c79b67475b53e4e83b6645e'; // SHA-256('BasketClubFlines')
 const EXPECTED_PASS_HASH = 'fb92c7e381b71ceda36d7e3d0f1064386452c4d6b2300ec9818652830f23f17c'; // SHA-256('En$emble')
+
+const COACH_USER_HASH = 'e6b7456c0995a1c64a21d9ad743167cdfad6950814236049a5805b5637e1e723'; // SHA-256('Coach')
+const COACH_PASS_HASH = '46e133807021a0f76df5ce29a752c003de99bdd5d85adefa55eaf7783738853c'; // SHA-256('P@ulrclens17082018')
+
+function isCoach() {
+  return localStorage.getItem(ROLE_KEY) === 'coach';
+}
+
+function updateNavPermissions() {
+  const sourcesNav = document.querySelector('[data-tab="sources"]');
+  if (sourcesNav) {
+    sourcesNav.style.display = isCoach() ? 'flex' : 'none';
+  }
+}
 
 async function sha256Hex(str) {
   if (crypto && crypto.subtle && crypto.subtle.digest) {
     const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
     return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
   }
-  // Fallback direct check si crypto.subtle non dispo (ex: http non sécurisé sur certains navigateurs anciens)
   return str;
 }
 
@@ -606,11 +626,13 @@ function initAuth() {
   function unlock() {
     overlay.hidden = true;
     document.body.style.overflow = '';
+    updateNavPermissions();
   }
 
   if (logoutBtn) {
     logoutBtn.addEventListener('click', () => {
       localStorage.removeItem(AUTH_KEY);
+      localStorage.removeItem(ROLE_KEY);
       showLogin();
       notify('Vous êtes déconnecté(e).');
     });
@@ -626,12 +648,24 @@ function initAuth() {
       const userHash = await sha256Hex(u);
       const passHash = await sha256Hex(p);
 
-      const isValid = (userHash === EXPECTED_USER_HASH && passHash === EXPECTED_PASS_HASH) ||
-                      (u === 'BasketClubFlines' && p === 'En$emble');
+      const isCoachAuth = (userHash === COACH_USER_HASH && passHash === COACH_PASS_HASH) ||
+                          (u.toLowerCase() === 'coach' && p === 'P@ulrclens17082018');
 
-      if (isValid) {
+      const isTeamAuth = (userHash === EXPECTED_USER_HASH && passHash === EXPECTED_PASS_HASH) ||
+                         (u === 'BasketClubFlines' && p === 'En$emble');
+
+      if (isCoachAuth) {
         localStorage.setItem(AUTH_KEY, 'true');
+        localStorage.setItem(ROLE_KEY, 'coach');
         unlock();
+        render();
+        notify('Bienvenue Coach Maxime ! Espace administrateur activé.');
+      } else if (isTeamAuth) {
+        localStorage.setItem(AUTH_KEY, 'true');
+        localStorage.setItem(ROLE_KEY, 'team');
+        unlock();
+        if (location.hash === '#sources') location.hash = '#overview';
+        render();
         notify('Connexion réussie ! Bienvenue sur BCF Analytics.');
       } else {
         errorDiv.textContent = 'Identifiant ou mot de passe incorrect.';
