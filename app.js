@@ -584,7 +584,7 @@ const COACH_USER_HASH = 'e6b7456c0995a1c64a21d9ad743167cdfad6950814236049a5805b5
 const COACH_PASS_HASH = '46e133807021a0f76df5ce29a752c003de99bdd5d85adefa55eaf7783738853c'; // SHA-256('P@ulrclens17082018')
 
 function isCoach() {
-  return localStorage.getItem(ROLE_KEY) === 'coach';
+  return sessionStorage.getItem(ROLE_KEY) === 'coach';
 }
 
 function updateNavPermissions() {
@@ -603,6 +603,10 @@ async function sha256Hex(str) {
 }
 
 function initAuth() {
+  // Nettoyage d'éventuels anciens jetons persistants dans localStorage
+  localStorage.removeItem(AUTH_KEY);
+  localStorage.removeItem(ROLE_KEY);
+
   const overlay = $('#auth-overlay');
   const form = $('#auth-form');
   const loginInput = $('#auth-login');
@@ -611,7 +615,7 @@ function initAuth() {
   const logoutBtn = $('#logout-btn');
 
   function checkSession() {
-    return localStorage.getItem(AUTH_KEY) === 'true';
+    return sessionStorage.getItem(AUTH_KEY) === 'true';
   }
 
   function showLogin() {
@@ -631,8 +635,8 @@ function initAuth() {
 
   if (logoutBtn) {
     logoutBtn.addEventListener('click', () => {
-      localStorage.removeItem(AUTH_KEY);
-      localStorage.removeItem(ROLE_KEY);
+      sessionStorage.removeItem(AUTH_KEY);
+      sessionStorage.removeItem(ROLE_KEY);
       showLogin();
       notify('Vous êtes déconnecté(e).');
     });
@@ -655,14 +659,14 @@ function initAuth() {
                          (u === 'BasketClubFlines' && p === 'En$emble');
 
       if (isCoachAuth) {
-        localStorage.setItem(AUTH_KEY, 'true');
-        localStorage.setItem(ROLE_KEY, 'coach');
+        sessionStorage.setItem(AUTH_KEY, 'true');
+        sessionStorage.setItem(ROLE_KEY, 'coach');
         unlock();
         render();
         notify('Bienvenue Coach Maxime ! Espace administrateur activé.');
       } else if (isTeamAuth) {
-        localStorage.setItem(AUTH_KEY, 'true');
-        localStorage.setItem(ROLE_KEY, 'team');
+        sessionStorage.setItem(AUTH_KEY, 'true');
+        sessionStorage.setItem(ROLE_KEY, 'team');
         unlock();
         if (location.hash === '#sources') location.hash = '#overview';
         render();
