@@ -1,0 +1,14 @@
+{
+  "name": "bcf-analytics",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Cockpit local des Seniors F de Flines-lez-Raches BC",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node --test tests/*.test.js",
+    "test:ui": "playwright test"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.58.2"
+  }
+}
