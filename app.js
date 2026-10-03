@@ -143,11 +143,107 @@ function sourcesView(){
     <section class="card section-gap">${cardHead('Mode d’emploi & format des données')}<div class="split"><div><h3>Une saison, pas à pas</h3><p class="help">1. Sélectionnez la saison en haut de l’écran.<br>2. Vérifiez l’effectif et les postes.<br>3. Ajoutez un match terminé, ses scores puis les détails disponibles.<br>4. Consultez les moyennes et préparez le scouting.<br>5. Exportez régulièrement une sauvegarde JSON.</p><h3>Comment sont calculés les indicateurs ?</h3><p class="help">Attaque et défense : total des points / nombre de matchs renseignés. Tirs : paniers réussis cumulés. LF % : total réussis / total tentés. Les champs absents restent « — ». Les moyennes par quart-temps utilisent les périodes connues ; une prolongation n’est pas mélangée avec le QT4. Aucun classement n’est déduit d’un calendrier incomplet.</p></div><div><h3>Stockage et confidentialité</h3><p class="help">Application autonome, sans service externe ni outil de suivi. Les données sont stockées dans localStorage ; elles ne sont pas partagées avec l’équipe et peuvent être effacées par le navigateur. Gardez la même adresse locale pour retrouver la sauvegarde. Ne diffusez pas les portraits sans les autorisations nécessaires.</p><h3>Importer les saisons précédentes</h3><p class="help">Téléchargez le modèle vierge, ajoutez l’effectif historique dans <code>seasons["2025-2026"].roster</code>, puis ses rencontres dans <code>matches</code>. Les identifiants des lignes individuelles doivent correspondre aux identifiants de cet effectif.</p></div></div>
     <details><summary>Schéma d’un match JSON (exemple fictif de format, non chargé)</summary><pre>${escapeHTML(JSON.stringify({id:'exemple-4173',date:'2025-10-05',opponent:'Équipe exemple',venue:'home',for:60,against:50,periods:[{for:15,against:10},{for:15,against:15},{for:15,against:10},{for:15,against:15}],shots:{two:20,three:5,ftm:5,fta:8,fouls:15},players:[]},null,2))}</pre><p class="help"><code>periods</code> et <code>shots</code> peuvent être null. Chaque valeur de shots peut aussi être null : <code>fta: null</code> signifie tentatives inconnues, pas zéro. Pour chaque période, les objets facultatifs <code>bcf</code> et <code>opp</code> contiennent <code>{fouls, ftm, fta}</code>, également nullables. Une ligne de joueuse : <code>{playerId, pts, min, shots}</code>. Les points individuels peuvent être partiels mais ne peuvent pas dépasser le score BCF. Les minutes sont décimales (24:30 = 24.5) ou null.</p><p class="help"><code>opponentShots</code> a le même format que shots. <code>opponentPlayers</code> contient des lignes <code>{name, number, pts, min, shots}</code>. <code>minutesReliable: false</code> et <code>opponentMinutesReliable: false</code> excluent les temps respectifs des moyennes sans les effacer. La provenance facultative contient <code>{origin, files, warnings}</code>. À la racine, <code>imports</code> mémorise les lots déjà intégrés pour empêcher les doublons et respecter les suppressions. Les notes sont un objet associant nom adverse et texte.</p></details></section>`;
 }
+function docsView(){
+  return pageHead('Guide & Documentation','Récapitulatif des fonctionnalités du cockpit et journal des mises à jour')+
+    `<div class="grid-2">
+      <section class="card">
+        ${cardHead('🏀 Fonctionnalités du cockpit','Présentation des différents modules d’analyse')}
+        <div style="display:grid;gap:16px;">
+          <div>
+            <strong>▦ Vue d’ensemble</strong>
+            <p class="help">Bilan global de la saison (victoires/défaites, attaque, défense, différentiel). Comprend les indicateurs clés et le <em>Top 5 scoreuses & leaders</em> par moyenne de points.</p>
+          </div>
+          <div>
+            <strong>▥ Matchs & quart-temps</strong>
+            <p class="help">Consultation détaillée de chaque rencontre (scores globaux et par quart-temps, évolution du score, synthèse des tirs à 2 pts, 3 pts, LF et fautes collectives). Filtres par lieu (domicile / extérieur) et résultat.</p>
+          </div>
+          <div>
+            <strong>♧ Effectif & statistiques</strong>
+            <p class="help">Tableau statistique complet de l'équipe : matchs joués, temps de jeu moyen, points par match, tirs à 2 pts et 3 pts par match (arrondis au supérieur), lancers francs réussis / tentés (% d'adresse) et fautes moyennes.</p>
+          </div>
+          <div>
+            <strong>◎ Scouting adverse</strong>
+            <p class="help">Préparation de match par adversaire : historique des confrontations, moyennes offensives/défensives face à cette équipe, carnet de notes et consignes coach, et tableau des <em>joueuses adverses observées</em> avec numéros et points moyens.</p>
+          </div>
+          <div>
+            <strong>⇄ Données & imports</strong>
+            <p class="help">Gestion des sources e-Marque FFBB (résumés, positions de tir, feuilles de match), déduction automatique des LF tentés, import/export de sauvegardes JSON et modèle vierge.</p>
+          </div>
+          <div>
+            <strong>🔒 Authentification & sécurité</strong>
+            <p class="help">Accès restreint par mot de passe et identifiant club (SHA-256) pour garantir la confidentialité des données et des plans de match diffusés à l'équipe.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        ${cardHead('🚀 Journal des mises à jour','Historique des évolutions apportées au cockpit')}
+        <div style="display:grid;gap:18px;">
+          <div class="source-row" style="border-top:none;padding-top:0;">
+            <div>
+              <span class="tag green" style="margin-bottom:6px;">Octobre 2026</span>
+              <strong>Protection par Login & Mot de passe</strong>
+              <p class="help">Mise en place d'un écran de connexion moderne et sécurisé (chiffrement SHA-256, mémorisation de session locale et bouton Déconnexion dans la barre latérale).</p>
+            </div>
+          </div>
+          <div class="source-row">
+            <div>
+              <span class="tag green" style="margin-bottom:6px;">Octobre 2026</span>
+              <strong>Publication et déploiement GitHub Pages</strong>
+              <p class="help">Configuration du dépôt GitHub et automatisation du déploiement en ligne pour consultation permanente par les joueuses sur smartphone et ordinateur.</p>
+            </div>
+          </div>
+          <div class="source-row">
+            <div>
+              <span class="tag" style="margin-bottom:6px;">Octobre 2026</span>
+              <strong>Affichage épuré & Tableau statistique unique</strong>
+              <p class="help">Retrait du trombinoscope en cartes au profit d'un tableau synthétique direct des statistiques individuelles dans l'onglet Effectif.</p>
+            </div>
+          </div>
+          <div class="source-row">
+            <div>
+              <span class="tag" style="margin-bottom:6px;">Octobre 2026</span>
+              <strong>Top scoreuses & leaders</strong>
+              <p class="help">Intégration du tableau dynamique des meilleures marqueuses sur la Vue d'ensemble et l'onglet Matchs & quart-temps en remplacement du bloc collectif.</p>
+            </div>
+          </div>
+          <div class="source-row">
+            <div>
+              <span class="tag" style="margin-bottom:6px;">Octobre 2026</span>
+              <strong>Scouting adverse 2026/2027</strong>
+              <p class="help">Ajout du tableau d'observation des joueuses adverses avec numéros de maillots, points moyens, temps de jeu et répartition des tirs.</p>
+            </div>
+          </div>
+          <div class="source-row">
+            <div>
+              <span class="tag" style="margin-bottom:6px;">Octobre 2026</span>
+              <strong>Calculs e-Marque avancés</strong>
+              <p class="help">Arrondi supérieur des tirs (2 pts, 3 pts) et fautes, déduction automatique des LF tentés par analyse des fautes P1/P2/P3 et des bonus.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <section class="card section-gap">
+      ${cardHead('💡 Astuces et règles d’usage')}
+      <div class="split">
+        <div>
+          <h3>Consultation mobile</h3>
+          <p class="help">Le cockpit est responsive et optimisé pour smartphone. Les joueuses peuvent l'ajouter à l'écran d'accueil de leur téléphone pour y accéder comme une application native.</p>
+        </div>
+        <div>
+          <h3>Sauvegarde des données</h3>
+          <p class="help">Les modifications saisies (notes de scouting, imports manuels) sont conservées dans le navigateur local. Pensez à exporter régulièrement un JSON depuis l'onglet <em>Données & imports</em>.</p>
+        </div>
+      </div>
+    </section>`;
+}
 function render(){
   tab=location.hash.slice(1)||'overview';
-  if(!['overview','matches','roster','scouting','sources'].includes(tab)) tab='overview';
+  if(!['overview','matches','roster','scouting','sources','docs'].includes(tab)) tab='overview';
   document.querySelectorAll('[data-tab]').forEach(a=>{a.classList.toggle('active',a.dataset.tab===tab);if(a.dataset.tab===tab)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current');});
-  $('#main').innerHTML=(storageProblem?`<div class="error" role="alert">${escapeHTML(storageProblem)} <a href="#sources">Données & imports</a></div>`:'')+(archiveNotice?`<div class="notice" style="margin-bottom:20px">${escapeHTML(archiveNotice)}</div>`:'')+({overview,matches:matchesView,roster:rosterView,scouting:scoutingView,sources:sourcesView}[tab])();
+  $('#main').innerHTML=(storageProblem?`<div class="error" role="alert">${escapeHTML(storageProblem)} <a href="#sources">Données & imports</a></div>`:'')+(archiveNotice?`<div class="notice" style="margin-bottom:20px">${escapeHTML(archiveNotice)}</div>`:'')+({overview,matches:matchesView,roster:rosterView,scouting:scoutingView,sources:sourcesView,docs:docsView}[tab])();
   bindView();
 }
 function bindView(){
