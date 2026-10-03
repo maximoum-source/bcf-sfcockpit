@@ -75,7 +75,8 @@ function overview(){
     return {player:p,stats:st};
   }).filter(item=>item.stats.count>0).sort((a,b)=>(b.stats.ptsTotal??0)-(a.stats.ptsTotal??0)||(b.stats.pts??0)-(a.stats.pts??0));
   const topScorers=playerRankings.slice(0,5);
-  return pageHead('Vue d’ensemble','Les bons repères pour faire progresser le collectif.',button('↓ Exporter','export'))+
+  const exportBtn = isCoach() ? button('↓ Exporter','export') : '';
+  return pageHead('Vue d’ensemble','Les bons repères pour faire progresser le collectif.',exportBtn)+
     metrics(data().matches)+`<div class="grid-2"><section class="card">${cardHead('Le rythme du match',`Points moyens par période · ${documented}/${s.count} matchs documentés`,legend)}${chart(BCF.quarterStats(data().matches))}</section><section class="card">${cardHead('D’où viennent nos paniers ?',`Paniers réussis cumulés · ${s.shotCount}/${s.count} matchs documentés`)}${s.shotCount?[['2 points',s.two],['3 points',s.three],['LF',s.ftm]].map(([label,value])=>`<div class="shot-row"><span>${label}</span><div class="shot-track"><i style="width:${(value??0)/shotMax*100}%"></i></div><b>${fmt(value)}</b></div>`).join(''):blankChart()}</section></div>
     <section class="card">${cardHead('Top scoreuses & leaders',topScorers.length?`Top ${topScorers.length} de la saison classé par points cumulés et moyenne`:'Aucun match avec feuille individuelle renseigné',`<a class="compact" href="#roster">Statistiques complètes →</a>`)}${topScorers.length?`<div class="table-wrap"><table><thead><tr><th>RANG</th><th>JOUEUSE</th><th>POSTE</th><th>MJ</th><th>POINTS TOTAUX</th><th>PTS/M</th><th>MIN/M</th><th>2 PTS/M</th><th>3 PTS/M</th></tr></thead><tbody>${topScorers.map(({player:p,stats:st},idx)=>`<tr><td><span class="tag ${idx===0?'amber':idx<3?'soft':'gray'}">#${idx+1}</span></td><td><button class="link-button person" data-action="player" data-id="${escapeHTML(p.id)}">${photo(p)}<span><strong>${escapeHTML(p.first+' '+p.last)}</strong><small>${num(p)}${p.captain?' · Capitaine':''}</small></span></button></td><td>${escapeHTML(p.position)}</td><td>${st.count}</td><td><strong style="color:var(--purple);font-size:14px">${fmt(st.ptsTotal,0)}</strong></td><td><strong>${fmt(st.pts)}</strong></td><td title="${st.minuteCount} match(s) avec minutes exploitables">${fmt(st.min)}</td><td>${fmtCeil(st.two)}</td><td>${fmtCeil(st.three)}</td></tr>`).join('')}</tbody></table></div>`:empty('Statistiques individuelles en attente','Les marqueuses apparaîtront dès la saisie ou l’import des feuilles de match.')}</section>
     <section class="card section-gap">${cardHead('Dernières rencontres','Résultats saisis ou importés',`<a class="compact" href="#matches">Tous les matchs →</a>`)}${matchTable([...data().matches].sort((a,b)=>b.date.localeCompare(a.date)).slice(0,4))}</section>`;
@@ -513,22 +514,31 @@ document.addEventListener('click',e=>{
     case 'player':playerModal(id);break;
     case 'edit-player':editPlayer(id);break;
     case 'add-player':editPlayer();break;
-    case 'export':download(database,`bcf-sauvegarde-${new Date().toISOString().slice(0,10)}.json`);break;
-    case 'template':download(BCF.initialData(),'bcf-modele-vierge.json');break;
+    case 'export':
+      if(!isCoach()){notify('Action réservée à l’administrateur.');break;}
+      download(database,`bcf-sauvegarde-${new Date().toISOString().slice(0,10)}.json`);break;
+    case 'template':
+      if(!isCoach()){notify('Action réservée à l’administrateur.');break;}
+      download(BCF.initialData(),'bcf-modele-vierge.json');break;
     case 'paste-json':if(allowNavigation())pasteJsonModal();break;
     case 'import-pdf':if(allowNavigation())$('#import-pdf-files').click();break;
     case 'archive-export':{
+      if(!isCoach()){notify('Action réservée à l’administrateur.');break;}
       const exported=BCF.initialData();exported.seasons[ARCHIVE.season]=ARCHIVE.data;exported.imports=[ARCHIVE.id];
       if(!confirm('Ce fichier contient le lot FFBB d’origine et le trombinoscope initial 2026/2027, sans vos modifications ni vos notes. Pour sauvegarder votre travail actuel, utilisez « Sauvegarder toutes les données ». Continuer ?'))break;
       download(BCF.validateData(exported),'bcf-lot-ffbb-2025-2026.json');break;
     }
     case 'pre-archive-export':try{
+      if(!isCoach()){notify('Action réservée à l’administrateur.');break;}
       const saved=localStorage.getItem(`${KEY}-before-${ARCHIVE.id}`);
       if(!saved)throw new Error('Aucune sauvegarde antérieure : ce navigateur était vierge lors de l’intégration.');
       download(saved,'bcf-avant-integration-ffbb.json',true);
     }catch(error){notify(error.message);}break;
     case 'import':if(allowNavigation())$('#import-file').click();break;
-    case 'raw-export':try{const raw=localStorage.getItem(KEY);if(!raw)throw new Error('Aucune sauvegarde brute disponible.');download(raw,'bcf-sauvegarde-brute.json',true);}catch(error){notify(error.message);}break;
+    case 'raw-export':try{
+      if(!isCoach()){notify('Action réservée à l’administrateur.');break;}
+      const raw=localStorage.getItem(KEY);if(!raw)throw new Error('Aucune sauvegarde brute disponible.');download(raw,'bcf-sauvegarde-brute.json',true);
+    }catch(error){notify(error.message);}break;
     case 'add-opponent':
       openModal('Ajouter un adversaire',`<form id="opponent-form">${inputField('Nom de l’équipe','name','','text','required maxlength="100"')}<div id="form-error" class="error" hidden></div><div class="form-actions"><button class="btn primary">Créer la fiche</button></div></form>`);
       $('#opponent-form').onsubmit=event=>{
