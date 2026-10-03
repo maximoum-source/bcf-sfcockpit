@@ -474,6 +474,88 @@ try {
   }
 } catch (e) {}
 
+const AUTH_KEY = 'bcf_authenticated_v1';
+const EXPECTED_USER_HASH = '661387ed4e7482fc1772fdfdeb168c60ce9dce9c2c79b67475b53e4e83b6645e'; // SHA-256('BasketClubFlines')
+const EXPECTED_PASS_HASH = 'fb92c7e381b71ceda36d7e3d0f1064386452c4d6b2300ec9818652830f23f17c'; // SHA-256('En$emble')
+
+async function sha256Hex(str) {
+  if (crypto && crypto.subtle && crypto.subtle.digest) {
+    const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+    return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+  }
+  // Fallback direct check si crypto.subtle non dispo (ex: http non sécurisé sur certains navigateurs anciens)
+  return str;
+}
+
+function initAuth() {
+  const overlay = $('#auth-overlay');
+  const form = $('#auth-form');
+  const loginInput = $('#auth-login');
+  const passInput = $('#auth-password');
+  const errorDiv = $('#auth-error');
+  const logoutBtn = $('#logout-btn');
+
+  function checkSession() {
+    return localStorage.getItem(AUTH_KEY) === 'true';
+  }
+
+  function showLogin() {
+    overlay.hidden = false;
+    document.body.style.overflow = 'hidden';
+    loginInput.value = '';
+    passInput.value = '';
+    errorDiv.style.display = 'none';
+    setTimeout(() => loginInput.focus(), 50);
+  }
+
+  function unlock() {
+    overlay.hidden = true;
+    document.body.style.overflow = '';
+  }
+
+  if (logoutBtn) {
+    logoutBtn.addEventListener('click', () => {
+      localStorage.removeItem(AUTH_KEY);
+      showLogin();
+      notify('Vous êtes déconnecté(e).');
+    });
+  }
+
+  if (form) {
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      errorDiv.style.display = 'none';
+      const u = loginInput.value.trim();
+      const p = passInput.value;
+
+      const userHash = await sha256Hex(u);
+      const passHash = await sha256Hex(p);
+
+      const isValid = (userHash === EXPECTED_USER_HASH && passHash === EXPECTED_PASS_HASH) ||
+                      (u === 'BasketClubFlines' && p === 'En$emble');
+
+      if (isValid) {
+        localStorage.setItem(AUTH_KEY, 'true');
+        unlock();
+        notify('Connexion réussie ! Bienvenue sur BCF Analytics.');
+      } else {
+        errorDiv.textContent = 'Identifiant ou mot de passe incorrect.';
+        errorDiv.style.display = 'block';
+        passInput.value = '';
+        passInput.focus();
+      }
+    });
+  }
+
+  if (!checkSession()) {
+    showLogin();
+  } else {
+    unlock();
+  }
+}
+
+initAuth();
+
 const requestedSeason=new URLSearchParams(location.search).get('season');
 if(BCF.SEASONS.includes(requestedSeason))season=requestedSeason;
 $('#season').value=season;

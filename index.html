@@ -23,7 +23,7 @@
       <a href="#scouting" data-tab="scouting"><span>◎</span>Scouting adverse</a>
       <a href="#sources" data-tab="sources"><span>⇄</span>Données & imports</a>
     </nav>
-    <div class="sidebar-bottom"><span class="local-dot"></span> Espace local & privé<p>Vos données restent dans ce navigateur.<br>Exportez-les pour les sauvegarder.</p><div class="coach"><img src="assets/maxime.jpg" alt=""><div><strong>Maxime Crepin</strong><small>Coach · Seniors F</small></div></div></div>
+    <div class="sidebar-bottom"><span class="local-dot"></span> Espace local & privé<p>Vos données restent dans ce navigateur.<br>Exportez-les pour les sauvegarder.</p><div class="coach"><img src="assets/maxime.jpg" alt=""><div><strong>Maxime Crepin</strong><small>Coach · Seniors F</small></div></div><button id="logout-btn" class="btn" style="width:100%;margin-top:12px;font-size:11px;padding:8px 10px;" type="button">🔒 Déconnexion</button></div>
   </aside>
   <div class="workspace">
     <header class="topbar"><div><span class="live-dot"></span> COCKPIT PERFORMANCE</div><label>Saison <select id="season" aria-label="Saison"><option value="2026-2027">2026 / 2027</option><option value="2025-2026">2025 / 2026</option></select></label></header>
@@ -34,5 +34,27 @@
   <div id="toast" role="status" hidden></div>
   <input type="file" id="import-file" accept=".json,application/json" hidden>
   <input type="file" id="import-pdf-files" accept=".pdf,application/pdf" multiple hidden>
+
+  <div id="auth-overlay" class="auth-overlay" hidden>
+    <div class="auth-card">
+      <div class="auth-header">
+        <div class="brand-ball" style="margin: 0 auto 12px;">◉</div>
+        <h2>BCF ANALYTICS</h2>
+        <p>Espace réservé · Seniors Féminines</p>
+      </div>
+      <form id="auth-form" class="auth-form" autocomplete="on">
+        <label class="field">
+          Identifiant
+          <input type="text" id="auth-login" class="input" placeholder="Identifiant club" required autofocus autocomplete="username">
+        </label>
+        <label class="field">
+          Mot de passe
+          <input type="password" id="auth-password" class="input" placeholder="Mot de passe" required autocomplete="current-password">
+        </label>
+        <div id="auth-error" class="error" style="display:none;margin-top:14px;margin-bottom:0;"></div>
+        <button type="submit" class="btn primary auth-submit" style="width:100%;margin-top:18px;">Se connecter</button>
+      </form>
+    </div>
+  </div>
 </body>
 </html>
