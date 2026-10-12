@@ -80,6 +80,80 @@
         { "playerId": "alexia", "pts": 30, "min": 36.95, "shots": { "two": 14, "three": 0, "ftm": 2, "fta": 6, "fouls": 4 } },
         { "playerId": "emilie", "pts": 0, "min": 27.37, "shots": { "two": 0, "three": 0, "ftm": 0, "fta": 0, "fouls": 0 } }
       ]
+    },
+    {
+      "id": "3279",
+      "date": "2026-10-04",
+      "venue": "home",
+      "opponent": "OSTRICOURT ABC - 2",
+      "for": 62,
+      "against": 52,
+      "periods": [
+        { "for": 21, "against": 11 },
+        { "for": 20, "against": 6 },
+        { "for": 6, "against": 17 },
+        { "for": 15, "against": 18 }
+      ],
+      "shots": { "two": 18, "three": 2, "ftm": 20, "fta": 33, "fouls": 24 },
+      "opponentShots": { "two": 18, "three": 1, "ftm": 13, "fta": 24, "fouls": 24 },
+      "opponentPlayers": [
+        { "name": "Diana Tir", "number": 14, "pts": 20, "min": 24.7167, "shots": { "two": 6, "three": 1, "ftm": 5, "fta": null, "fouls": 0 } },
+        { "name": "Deva Lespagnol", "number": 12, "pts": 10, "min": 20.2, "shots": { "two": 4, "three": 0, "ftm": 2, "fta": null, "fouls": 0 } },
+        { "name": "Sarah Duthieuw", "number": 7, "pts": 6, "min": 13.7667, "shots": { "two": 3, "three": 0, "ftm": 0, "fta": null, "fouls": 1 } },
+        { "name": "Melissa Vitaliano", "number": 5, "pts": 4, "min": 23.4167, "shots": { "two": 2, "three": 0, "ftm": 0, "fta": null, "fouls": 1 } },
+        { "name": "Lena Lespagnol", "number": 9, "pts": 4, "min": 22.9, "shots": { "two": 2, "three": 0, "ftm": 0, "fta": null, "fouls": 0 } },
+        { "name": "Jade Alati", "number": 11, "pts": 3, "min": 27.7167, "shots": { "two": 0, "three": 0, "ftm": 3, "fta": null, "fouls": 5 } },
+        { "name": "Florine Blanchard", "number": 13, "pts": 3, "min": 33.2333, "shots": { "two": 1, "three": 0, "ftm": 1, "fta": null, "fouls": 4 } },
+        { "name": "Leane Quilliot", "number": 8, "pts": 1, "min": 11.6167, "shots": { "two": 0, "three": 0, "ftm": 1, "fta": null, "fouls": 0 } },
+        { "name": "Jazz Noje--dubois", "number": 10, "pts": 1, "min": 25.0333, "shots": { "two": 0, "three": 0, "ftm": 1, "fta": null, "fouls": 5 } },
+        { "name": "Anais Kos", "number": 6, "pts": 0, "min": 3.3167, "shots": { "two": 0, "three": 0, "ftm": 0, "fta": null, "fouls": 0 } }
+      ],
+      "players": [
+        { "playerId": "marie", "pts": 8, "min": 18.18, "shots": { "two": 4, "three": 0, "ftm": 0, "fta": 0, "fouls": 0 } },
+        { "playerId": "clara", "pts": 3, "min": 20.67, "shots": { "two": 1, "three": 0, "ftm": 1, "fta": 2, "fouls": 3 } },
+        { "playerId": "amandine", "pts": 6, "min": 18.57, "shots": { "two": 1, "three": 1, "ftm": 1, "fta": 2, "fouls": 1 } },
+        { "playerId": "anelene", "pts": 13, "min": 26.48, "shots": { "two": 6, "three": 0, "ftm": 1, "fta": 2, "fouls": 0 } },
+        { "playerId": "ines", "pts": 4, "min": 17.6, "shots": { "two": 2, "three": 0, "ftm": 0, "fta": 0, "fouls": 4 } },
+        { "playerId": "oceane", "pts": 0, "min": 12.58, "shots": { "two": 0, "three": 0, "ftm": 0, "fta": 0, "fouls": 4 } },
+        { "playerId": "camille", "pts": 0, "min": 11.72, "shots": { "two": 0, "three": 0, "ftm": 0, "fta": 0, "fouls": 1 } },
+        { "playerId": "celia", "pts": 8, "min": 22.4, "shots": { "two": 1, "three": 1, "ftm": 3, "fta": 4, "fouls": 3 } },
+        { "playerId": "alexia", "pts": 20, "min": 33.28, "shots": { "two": 3, "three": 0, "ftm": 14, "fta": 23, "fouls": 3 } },
+        { "playerId": "emilie", "pts": 0, "min": 18.52, "shots": { "two": 0, "three": 0, "ftm": 0, "fta": 0, "fouls": 2 } }
+      ]
+    },
+    {
+      "id": "3309",
+      "date": "2026-10-10",
+      "venue": "home",
+      "opponent": "DORIGNIES DOUAI AAE",
+      "for": 82,
+      "against": 41,
+      "periods": [
+        { "for": 21, "against": 16 },
+        { "for": 24, "against": 6 },
+        { "for": 22, "against": 11 },
+        { "for": 15, "against": 8 }
+      ],
+      "shots": { "two": 37, "three": 0, "ftm": 8, "fta": 14, "fouls": 8 },
+      "opponentShots": { "two": 16, "three": 1, "ftm": 6, "fta": 14, "fouls": 16 },
+      "opponentPlayers": [
+        { "name": "Audrey Pluta", "number": 11, "pts": 16, "min": 33.2333, "shots": { "two": 6, "three": 0, "ftm": 4, "fta": null, "fouls": 4 } },
+        { "name": "Chaima Talbi", "number": 6, "pts": 11, "min": 35.5833, "shots": { "two": 5, "three": 0, "ftm": 1, "fta": null, "fouls": 3 } },
+        { "name": "Romane Casier", "number": 12, "pts": 7, "min": 38.0667, "shots": { "two": 3, "three": 0, "ftm": 1, "fta": null, "fouls": 2 } },
+        { "name": "Wendy Boyaval", "number": 7, "pts": 4, "min": 40.0, "shots": { "two": 2, "three": 0, "ftm": 0, "fta": null, "fouls": 2 } },
+        { "name": "Tiffany Dehaies", "number": 10, "pts": 3, "min": 19.0167, "shots": { "two": 0, "three": 1, "ftm": 0, "fta": null, "fouls": 2 } },
+        { "name": "Rayane Mammou", "number": 9, "pts": 0, "min": 34.1, "shots": { "two": 0, "three": 0, "ftm": 0, "fta": null, "fouls": 3 } }
+      ],
+      "players": [
+        { "playerId": "marie", "pts": 5, "min": 19.38, "shots": { "two": 2, "three": 0, "ftm": 1, "fta": 2, "fouls": 0 } },
+        { "playerId": "clara", "pts": 16, "min": 30.05, "shots": { "two": 8, "three": 0, "ftm": 0, "fta": 0, "fouls": 1 } },
+        { "playerId": "amandine", "pts": 9, "min": 30.57, "shots": { "two": 4, "three": 0, "ftm": 1, "fta": 2, "fouls": 0 } },
+        { "playerId": "anelene", "pts": 12, "min": 27.68, "shots": { "two": 6, "three": 0, "ftm": 0, "fta": 0, "fouls": 0 } },
+        { "playerId": "ines", "pts": 5, "min": 20.52, "shots": { "two": 2, "three": 0, "ftm": 1, "fta": 2, "fouls": 1 } },
+        { "playerId": "laurette", "pts": 14, "min": 24.02, "shots": { "two": 7, "three": 0, "ftm": 0, "fta": 0, "fouls": 3 } },
+        { "playerId": "celia", "pts": 0, "min": 19.38, "shots": { "two": 0, "three": 0, "ftm": 0, "fta": 0, "fouls": 0 } },
+        { "playerId": "alexia", "pts": 21, "min": 28.3, "shots": { "two": 8, "three": 0, "ftm": 5, "fta": 8, "fouls": 3 } }
+      ]
     }
   ];
   root.BCF_MATCHES_2026 = matches2026;

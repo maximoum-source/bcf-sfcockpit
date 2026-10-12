@@ -574,7 +574,8 @@ try {
     if (existingIdx === -1) {
       s26.matches.push(valid);
       added26 = true;
-    } else if (!s26.matches[existingIdx].opponentPlayers?.length && valid.opponentPlayers?.length) {
+    } else {
+      // Mettre à jour avec la version officielle validée
       s26.matches[existingIdx] = valid;
       added26 = true;
     }
