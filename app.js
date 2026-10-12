@@ -569,21 +569,27 @@ try {
   const s26 = database.seasons['2026-2027'];
   let added26 = false;
   matches2026.forEach(m => {
-    const existingIdx = s26.matches.findIndex(x => x.id === m.id);
-    const valid = BCF.validateMatch(m, s26.roster);
-    if (existingIdx === -1) {
-      s26.matches.push(valid);
-      added26 = true;
-    } else {
-      // Mettre à jour avec la version officielle validée
-      s26.matches[existingIdx] = valid;
-      added26 = true;
+    try {
+      const existingIdx = s26.matches.findIndex(x => x.id === m.id);
+      const valid = BCF.validateMatch(m, s26.roster);
+      if (existingIdx === -1) {
+        s26.matches.push(valid);
+        added26 = true;
+      } else {
+        // Mettre à jour avec la version officielle validée
+        s26.matches[existingIdx] = valid;
+        added26 = true;
+      }
+    } catch(matchErr) {
+      console.warn('Erreur validation match 2026:', m.id, matchErr);
     }
   });
   if (added26) {
     persist(database);
   }
-} catch (e) {}
+} catch (e) {
+  console.error('Erreur intégration matchs 2026:', e);
+}
 
 const AUTH_KEY = 'bcf_authenticated_v1';
 const ROLE_KEY = 'bcf_user_role_v1';

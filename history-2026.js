@@ -88,6 +88,7 @@
       "opponent": "OSTRICOURT ABC - 2",
       "for": 62,
       "against": 52,
+      "opponentMinutesReliable": false,
       "periods": [
         { "for": 21, "against": 11 },
         { "for": 20, "against": 6 },
