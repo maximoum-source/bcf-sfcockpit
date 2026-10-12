@@ -98,16 +98,25 @@ function matchesView(){
 function rosterContent(query=''){
   const normalize=s=>s.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
   const players=data().roster.filter(p=>normalize(`${p.first} ${p.last} ${p.number??''} ${p.position}`).includes(normalize(query)));
+  const filteredMatches=data().matches.filter(m=>(venue==='all'||m.venue===venue)&&(matchFilter==='all'||m.id===matchFilter));
   if(!players.length) return empty('Aucune joueuse dans cette sélection','Ajoutez une joueuse ou importez l’effectif de cette saison.');
   return `<section class="card"><div class="table-wrap"><table><thead><tr><th>JOUEUSE</th><th>POSTE</th><th>MJ¹</th><th>PTS TOTAUX</th><th>PTS/M</th><th>MIN/M</th><th>2 PTS/M</th><th>3 PTS/M</th><th>LF M/T²</th><th>LF %</th><th>FAUTES/M</th></tr></thead><tbody>${players.map(p=>{
-    const s=BCF.playerStats(data().matches,p.id);
+    const s=BCF.playerStats(filteredMatches,p.id);
     return `<tr><td><button class="link-button person" data-action="player" data-id="${escapeHTML(p.id)}">${photo(p)}<span>${escapeHTML(p.first+' '+p.last)}<small>${num(p)}</small></span></button></td><td>${escapeHTML(p.position)}</td><td>${s.count}</td><td><strong style="color:var(--purple)">${fmt(s.ptsTotal,0)}</strong></td><td><strong>${fmt(s.pts)}</strong></td><td title="${s.minuteCount} match(s) avec minutes exploitables">${fmt(s.min)}</td><td>${fmtCeil(s.two)}</td><td>${fmtCeil(s.three)}</td><td>${s.shotCount?`${fmt(s.ftm)}/${fmt(s.fta)}`:'—'}</td><td>${percent(s.ftPct)}</td><td>${fmtCeil(s.fouls)}</td></tr>`;
   }).join('')}</tbody></table></div><p class="help section-gap">¹ MJ : lignes individuelles documentées, pas une preuve d’entrée en jeu. Chaque moyenne utilise les valeurs connues. Les tirs à 2 pts/m, 3 pts/m et fautes/m sont arrondis à l’entier supérieur. Les temps des feuilles dont le cumul équipe diffère de 200:00 (sans prolongation) sont exclus de Min/M et restent consultables dans les fiches. ² LF : totaux cumulés ; les LF tentés ne figurent pas dans les PDF. Une absence de donnée n’est jamais remplacée par zéro.</p></section>`;
 }
 function rosterView(){
+  const filteredMatches=data().matches.filter(m=>(venue==='all'||m.venue===venue)&&(matchFilter==='all'||m.id===matchFilter));
   return pageHead('Effectif & statistiques',`${data().roster.length} joueuses renseignées · Des profils complémentaires, une ambition commune.`,button('+ Ajouter une joueuse','add-player'))+
     (season==='2026-2027'?'<div class="notice" style="margin-bottom:20px">Noms et numéros transcrits des pièces jointes. Les codes C / PG / PF et la croix sur Leila sont conservés dans les fiches, sans interprétation. Vous pouvez confirmer les postes en modifiant les fiches.</div>':'<div class="notice" style="margin-bottom:20px">Effectif historique issu des résumés 2025/2026, distinct du trombinoscope actuel. Le numéro affiché est celui de la dernière feuille disponible. Temps incohérents exclus des moyennes ; voir les fiches pour les valeurs source.</div>')+
-    `<div class="filters"><input class="input" id="roster-search" aria-label="Rechercher une joueuse" placeholder="Rechercher par nom, numéro ou poste…"><span class="tag">${season.replace('-',' / ')}</span></div><div id="roster-results">${rosterContent()}</div>`;
+    `<div class="filters">
+      <label class="compact">Terrain <select id="venue"><option value="all">Tous les terrains</option><option value="home" ${venue==='home'?'selected':''}>Domicile</option><option value="away" ${venue==='away'?'selected':''}>Extérieur</option></select></label>
+      <label class="compact">Rencontre <select id="match-filter"><option value="all">Tous les matchs</option>${data().matches.map(m=>`<option value="${escapeHTML(m.id)}" ${matchFilter===m.id?'selected':''}>${escapeHTML(m.date+' · '+m.opponent)}</option>`).join('')}</select></label>
+      <input class="input" id="roster-search" aria-label="Rechercher une joueuse" placeholder="Rechercher par nom, numéro ou poste…" style="flex:1;min-width:180px">
+      <span class="tag">${filteredMatches.length} match(s) sélectionné(s)</span>
+      <span class="tag gray">${season.replace('-',' / ')}</span>
+    </div>
+    <div id="roster-results">${rosterContent()}</div>`;
 }
 function scoutingView(){
   const opponents=[...new Set([...data().matches.map(m=>m.opponent),...Object.keys(data().notes)])].sort((a,b)=>a.localeCompare(b,'fr'));
@@ -180,6 +189,13 @@ function docsView(){
         ${cardHead('🚀 Journal des mises à jour','Historique des évolutions apportées au cockpit')}
         <div style="display:grid;gap:18px;">
           <div class="source-row" style="border-top:none;padding-top:0;">
+            <div>
+              <span class="tag green" style="margin-bottom:6px;">Octobre 2026</span>
+              <strong>Filtres de match et de terrain croisés</strong>
+              <p class="help">Possibilité de filtrer les statistiques complètes de l'effectif par rencontre ou par terrain (domicile/extérieur) tout en conservant la sélection active entre les onglets Matchs & quart-temps et Effectif.</p>
+            </div>
+          </div>
+          <div class="source-row">
             <div>
               <span class="tag green" style="margin-bottom:6px;">Octobre 2026</span>
               <strong>Protection par Login & Mot de passe</strong>
