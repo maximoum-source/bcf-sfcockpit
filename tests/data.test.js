@@ -9,15 +9,16 @@ function match(overrides={}){
     periods:[{for:15,against:10},{for:15,against:15},{for:15,against:10},{for:15,against:15}],
     shots:{two:20,three:5,ftm:5,fta:8,fouls:15},players:[],...overrides};
 }
-test('trombinoscope : 11 joueuses (Leila retirée), coach exclu, saisons séparées',()=>{
+test('effectif : 12 joueuses (Leila retirée, Lucile Butel ajoutée sans photo), coach exclu, saisons séparées',()=>{
   const d=initial();
-  assert.equal(roster.length,11);
+  assert.equal(roster.length,12);
+  assert.equal(roster.find(p=>p.id==='lucile').photo,null);
   assert.equal(roster.some(p=>p.last==='Crepin'),false);
   assert.equal(roster.find(p=>p.captain).id,'alexia');
   assert.equal(roster.some(p=>p.id==='leila'),false);
   assert.equal(d.seasons['2025-2026'].roster.length,0);
   for(const s of BCF.SEASONS) assert.equal(d.seasons[s].matches.length,0);
-  assert.equal(BCF.validateData(d).seasons['2026-2027'].roster.length,11);
+  assert.equal(BCF.validateData(d).seasons['2026-2027'].roster.length,12);
 });
 test('absence de données : pas de zéro inventé ni NaN',()=>{
   const s=BCF.summary([]);

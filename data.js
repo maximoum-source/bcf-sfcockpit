@@ -12,8 +12,9 @@
     ['celia','Celia','Maux',7,'Meneuse / ailière (PG, Ai)','Annotation manuscrite : PG, Ai.'],
     ['ines','Ines','Mbuy Kabuaya-Diondo',13,'Meneuse / ailière / ailière forte (PG, Ai, AF)','Annotation manuscrite : PG, Ai.'],
     ['alexia','Alexia','Morival',14,'Intérieur / pivot (C, PF)','Annotation manuscrite : C, PF (CAP).'],
-    ['clara','Clara','Morival',11,'Ailière / ailière forte (Ai, AF)','Annotation manuscrite : AF, PF.']
-  ].map(([id,first,last,number,position,annotation]) => ({id,first,last,number,position,annotation,captain:id==='alexia',photo:`assets/${id}.jpg`}));
+    ['clara','Clara','Morival',11,'Ailière / ailière forte (Ai, AF)','Annotation manuscrite : AF, PF.'],
+    ['lucile','Lucile','Butel',11,'À confirmer','Ajoutée depuis la feuille de match #3341 (licence VT922657), hors trombinoscope.']
+  ].map(([id,first,last,number,position,annotation]) => ({id,first,last,number,position,annotation,captain:id==='alexia',photo:id==='lucile'?null:`assets/${id}.jpg`}));
   function initialData() {
     return {version:1,seasons:{'2026-2027':{roster:structuredClone(roster),matches:[],notes:{}},'2025-2026':{roster:[],matches:[],notes:{}}}};
   }

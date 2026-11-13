@@ -7,7 +7,7 @@ test('accueil, effectif, profil et historique sans données inventées',async({p
   await expect(page.getByRole('heading',{name:'Vue d’ensemble',exact:true})).toBeVisible();
   await expect(page.getByText('0 match renseigné',{exact:true})).toBeVisible();
   await page.getByRole('link',{name:'Effectif & statistiques'}).click();
-  await expect(page.locator('.player-card')).toHaveCount(11);
+  await expect(page.locator('.player-card')).toHaveCount(12);
   await expect(page.locator('.player-card img')).toHaveCount(11);
   for(const image of await page.locator('.player-card img').all()){
     await image.scrollIntoViewIfNeeded();

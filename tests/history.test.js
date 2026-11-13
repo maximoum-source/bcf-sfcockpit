@@ -8,7 +8,7 @@ test('22 rencontres réelles (19 détaillées + 3 résultats officiels) et 11 jo
   const d=historical(),past=d.seasons['2025-2026'];
   assert.equal(past.matches.length,22);assert.equal(past.roster.length,11);
   assert.equal(past.matches.some(m=>m.id==='4108'),true);
-  assert.equal(d.seasons['2026-2027'].roster.length,11);
+  assert.equal(d.seasons['2026-2027'].roster.length,12);
   assert.equal(d.seasons['2026-2027'].matches.length,0);
   assert.equal(archive.manifest.length,19);
   for(const entry of archive.manifest){

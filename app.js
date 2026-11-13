@@ -143,7 +143,7 @@ function sourcesView(){
   return pageHead('Données & imports','Des sources identifiées. Des indicateurs fiables.',button('↓ Sauvegarder toutes les données','export',true))+
     (ARCHIVE?`<section class="card" style="margin-bottom:22px">${cardHead('Archives FFBB · 2025 / 2026','60 fichiers reçus · 57 PDF exploitables · 22 rencontres intégrées',`<span class="tag green">${database.seasons['2025-2026'].matches.length} matchs dans le cockpit</span>`)}<p class="help">19 rencontres détaillées (scores finaux et mi-temps recoupés avec les totaux individuels, quart-temps et cartes des tirs FFBB). 3 rencontres issues des résultats officiels de la liste fournie (scores, dates, terrains). L’effectif historique compte 11 joueuses ; il ne remplace pas l’effectif 2026/2027.</p><div class="notice"><strong>22 matchs complets sur 22.</strong> Les lancers francs tentés (LF) ont été déduits selon la méthodologie e-Marque officielle par croisement des feuilles de match (fautes P1/P2/P3 et bonus) et des résumés. Le match #4108 contre Linselles a été intégré avec ses trois PDF corrigés. Les matchs #4121, #4240 et #4253 intègrent les scores officiels en attendant la réception des feuilles détaillées (aucun détail inventé).</div><p class="help section-gap"><strong>Limites :</strong> Les temps dont le cumul équipe diffère de 200:00 sont conservés en valeurs source, mais exclus des moyennes. Seuls 7 matchs du lot ont un cumul BCF de 200:00. Les chiffres affichés décrivent les documents reçus, pas nécessairement la saison complète.</p><div class="actions">${button('↓ Récupérer la sauvegarde avant intégration','pre-archive-export')}${button('↓ Exporter le lot FFBB seul','archive-export')}</div><details><summary>Traçabilité des 22 rencontres et fichiers sources</summary>${ARCHIVE.data.matches.map(m=>`<div class="source-row"><div><strong>#${m.id} · ${escapeHTML(m.opponent)} · ${m.for} – ${m.against}</strong><p>${m.provenance.files.length?m.provenance.files.map(escapeHTML).join('<br>'):'Résultat officiel issu de la liste fournie'}</p></div></div>`).join('')}</details></section>`:'')+
     `<div class="grid-2"><section class="card">${cardHead('Vos sources','Statut réel des données du cockpit')}
-      <div class="source-row"><div><strong>Trombinoscope · 2026 / 2027</strong><p>11 joueuses + Maxime Crepin (coach). Portraits recadrés localement.</p></div><span class="tag green">Intégré</span></div>
+      <div class="source-row"><div><strong>Trombinoscope · 2026 / 2027</strong><p>11 joueuses + Maxime Crepin (coach). Portraits recadrés localement. Lucile Butel ajoutée depuis la feuille #3341 (sans photo).</p></div><span class="tag green">Intégré</span></div>
       <div class="source-row"><div><strong>NotebookLM · 2025 / 2026</strong><p>Les données ont été intégrées depuis les PDF joints, pas par une connexion au notebook. Aucune synchronisation automatique.</p></div><a class="btn" href="${NOTEBOOK}" target="_blank" rel="noopener noreferrer">Ouvrir ↗</a></div>
       <div class="source-row"><div><strong>Statistiques sportives</strong><p>${BCF.SEASONS.map(s=>`${s} : ${database.seasons[s].matches.length} match(s)`).join(' · ')}</p></div><span class="tag gray">Saisie / JSON</span></div>
       <p class="help section-gap">Les valeurs fictives et les portraits génériques du HTML fourni ont été retirés. Dates de naissance, licences, signatures, nationalités et assurances ne sont pas copiées dans le cockpit. Seules les informations utiles au cockpit sont conservées.</p></section>
@@ -189,6 +189,13 @@ function docsView(){
         ${cardHead('🚀 Journal des mises à jour','Historique des évolutions apportées au cockpit')}
         <div style="display:grid;gap:18px;">
           <div class="source-row" style="border-top:none;padding-top:0;">
+            <div>
+              <span class="tag green" style="margin-bottom:6px;">Novembre 2026</span>
+              <strong>Matchs #3341 (Raimbeaucourt) et #3371 (Ostrevent)</strong>
+              <p class="help">Intégration des feuilles de match et résumés FFBB : statistiques individuelles, quart-temps, LF tentés déduits (méthode e-Marque) et scouting adverse. Lucile Butel ajoutée à l'effectif (sans photo). Pas de temps de jeu sur la feuille #3371 : minutes exclues des moyennes.</p>
+            </div>
+          </div>
+          <div class="source-row">
             <div>
               <span class="tag green" style="margin-bottom:6px;">Octobre 2026</span>
               <strong>Filtres de match et de terrain croisés</strong>
@@ -571,7 +578,10 @@ try {
   let updated = false;
   initialRoster.forEach(initP => {
     const p = currentRoster.find(x => x.id === initP.id);
-    if (p && initP.position !== p.position) {
+    if (!p) {
+      currentRoster.push(structuredClone(initP));
+      updated = true;
+    } else if (initP.position !== p.position) {
       p.position = initP.position;
       updated = true;
     }
